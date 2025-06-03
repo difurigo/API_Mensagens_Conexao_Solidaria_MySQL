@@ -1,8 +1,8 @@
-using ConexaoSolidaria.Domain.Entities;
+using api_gs_mensagens_conexao_solidaria.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Oracle.EntityFrameworkCore.Storage.Internal; // OracleExecutionStrategy
 
-namespace ConexaoSolidaria.Infrastructure.Data
+namespace api_gs_mensagens_conexao_solidaria.Infrastructure.Data
 {
     public class ApplicationContext : DbContext
     {
@@ -15,6 +15,7 @@ namespace ConexaoSolidaria.Infrastructure.Data
         }
 
         public DbSet<Mensagem> Mensagens { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,6 +1,6 @@
-using ConexaoSolidaria.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using api_gs_mensagens_conexao_solidaria.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

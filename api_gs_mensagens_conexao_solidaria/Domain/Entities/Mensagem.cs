@@ -1,7 +1,7 @@
-using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ConexaoSolidaria.Domain.Entities
+namespace api_gs_mensagens_conexao_solidaria.Domain.Entities
 {
     public class Mensagem
     {
@@ -20,5 +20,7 @@ namespace ConexaoSolidaria.Domain.Entities
         public string Status { get; set; } = "Pendente";
         [Required]
         public string UsuarioId { get; set; } = string.Empty;
+        [ForeignKey("UsuarioId")]
+        public Usuario? Usuario { get; set; }
     }
 }

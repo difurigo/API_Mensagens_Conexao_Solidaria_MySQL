@@ -1,17 +1,24 @@
 
 # 📡 API - Conexão Solidária (Mensagens de Emergência)
 
-Conexão Solidária é uma plataforma de comunicação offline que utiliza redes mesh via Bluetooth Low Energy (BLE) para permitir a troca de mensagens mesmo sem internet ou rede móvel. 
-Cada celular com o aplicativo instalado atua como um nó da rede, transmitindo mensagens entre dispositivos próximos até que um deles alcance conexão com a internet e sincronize os dados com a central. 
+**Conexão Solidária** é uma plataforma de comunicação offline que utiliza redes mesh com Bluetooth Low Energy (BLE) para permitir a troca de mensagens em cenários de desastre, mesmo sem acesso à internet ou rede móvel.
 
-Essa arquitetura distribuída e resiliente garante que a comunidade possa continuar comunicando-se, organizando-se e pedindo ajuda, mesmo sob total desconexão. 
+Cada celular com o app instalado age como um nó na rede, retransmitindo mensagens entre dispositivos próximos até que uma conexão com a internet seja encontrada para sincronização com a central.  
+Essa abordagem resiliente mantém a comunicação comunitária ativa mesmo sob blackout total.
 
+---
 
-## 🧩 Diagrama Entidade-Relacionamento
+## 🧩 Diagrama Entidade-Relacionamento (1:N)
 
 ```
+Usuario
+-------
+- Id (string) PK
+- Nome (string)
+- Email (string)
+
 Mensagem
----------
+--------
 - Id (GUID) PK
 - UUID (string)
 - Titulo (string)
@@ -21,21 +28,20 @@ Mensagem
 - DataEnvio (DateTime)
 - TTL (int)
 - Status (string)
-- UsuarioId (string)
+- UsuarioId (string) FK → Usuario.Id
 ```
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
-- ASP.NET Core 8.0
-- Razor Pages + TagHelpers
-- Entity Framework Core 8
-- Oracle.EntityFrameworkCore
-- Oracle Database (via SQL Developer)
-- Swagger / Swashbuckle
-- Docker (Azure-ready)
-- Visual Studio 2022
+- ✅ ASP.NET Core 8.0
+- ✅ Razor Pages + TagHelpers
+- ✅ Entity Framework Core 8 (com Migrations)
+- ✅ Banco de Dados Oracle (Oracle.EntityFrameworkCore)
+- ✅ Swagger (via Swashbuckle)
+- ✅ Docker (Azure-ready)
+- ✅ Visual Studio 2022
 
 ---
 
@@ -45,24 +51,37 @@ Mensagem
 # Restaurar dependências
 dotnet restore
 
-# Criar a migration
-dotnet ef migrations add InitialCreate
-
-# Aplicar ao banco Oracle
+# Aplicar migration
 dotnet ef database update
 
-# Rodar o servidor
+# Rodar a API
 dotnet run
 ```
 
-Acesse a documentação Swagger em:  
-`http://localhost:<PORTA>/swagger`
+📄 Documentação Swagger:
+```
+http://localhost:<PORTA>/swagger
+```
 
 ---
 
-## 🧪 Testes de Endpoints
+## 🧪 Endpoints e Exemplos de Testes
 
-### 1. POST /api/Mensagem
+### 📌 POST /api/Usuario
+
+```json
+{
+  "id": "123",
+  "nome": "Maria da Silva",
+  "email": "maria@email.com"
+}
+```
+
+✅ Cria novo usuário
+
+---
+
+### 📨 POST /api/Mensagem
 
 ```json
 {
@@ -70,25 +89,23 @@ Acesse a documentação Swagger em:
   "conteudo": "Nível do rio subiu rapidamente",
   "prioridade": "Alta",
   "localizacao": "Rua das Águas, 123",
-  "usuarioId": "1"
+  "ttl": 5,
+  "status": "Pendente",
+  "usuarioId": "123"
 }
 ```
 
-✅ Retorna 201 Created com a mensagem gerada
+✅ Cria nova mensagem vinculada a um usuário existente
 
 ---
 
-### 2. GET /api/Mensagem/usuario/{usuarioId}
+### 🔍 GET /api/Mensagem/usuario/{usuarioId}
 
-- Exemplo: `/api/Mensagem/usuario/1`
-
-✅ Retorna todas as mensagens enviadas pelo usuário
+Retorna todas as mensagens de um usuário.
 
 ---
 
-### 3. PUT /api/Mensagem/{uuid}
-
-(Coloque os campos que deseja atualizar)
+### ✏️ PUT /api/Mensagem/{uuid}
 
 ```json
 {
@@ -97,37 +114,36 @@ Acesse a documentação Swagger em:
   "prioridade": "Alta",
   "localizacao": "Rua Central, 999",
   "status": "Pendente",
-  "usuarioId": "1"
+  "usuarioId": "123"
 }
 ```
 
-✅ Retorna 204 No Content
+✅ Atualiza a mensagem com base no UUID
 
 ---
 
-### 4. DELETE /api/Mensagem/{uuid}
+### ❌ DELETE /api/Mensagem/{uuid}
 
-✅ Remove uma mensagem individual por UUID
-
----
-
-### 5. DELETE /api/Mensagem/usuario/{usuarioId}
-
-✅ Remove todas as mensagens de um usuário específico
+Remove uma mensagem específica por UUID.
 
 ---
 
-## 🧾 Consultas no Oracle SQL
+### ❌ DELETE /api/Mensagem/usuario/{usuarioId}
+
+Remove **todas** as mensagens do usuário.
+
+---
+
+## 🧾 Consulta rápida no Oracle SQL
 
 ```sql
 SELECT * FROM MENSAGENS;
+SELECT * FROM USUARIOS;
 ```
 
 ---
 
-## 🐳 Deploy com Docker (Azure-ready)
-
-### Dockerfile já incluso no projeto
+## 🐳 Deploy com Docker
 
 ```bash
 # Build da imagem
@@ -137,14 +153,22 @@ docker build -t conexao-solidaria-api .
 docker run -p 5000:80 conexao-solidaria-api
 ```
 
+> O projeto está pronto para ser deployado no Azure com ajustes simples no `Dockerfile`.
+
+---
+
+## 📹 Vídeos obrigatórios para entrega
+
+- 🎥 **Vídeo de Demonstração (até 8 min):**  
+  Mostrar os principais endpoints funcionando via Swagger + código
+
+- 🎙️ **Vídeo Pitch (até 3 min):**  
+  Explicar a ideia, o problema resolvido e como o sistema funciona
+
 ---
 
 ## 👨‍💻 Autores
-**Diego Furigo**  
-📌 RM: 558755
 
-**Melissa Pereira**  
-📌 RM: 555656  
-
-**Lu Vieira**  
-📌 RM: 558935  
+- **Diego Furigo** – RM: 558755  
+- **Melissa Pereira** – RM: 555656  
+- **Lu Vieira** – RM: 558935  
