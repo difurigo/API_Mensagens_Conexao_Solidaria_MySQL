@@ -134,7 +134,7 @@ Remove **todas** as mensagens do usuário.
 
 ---
 
-## 🧾 Consulta rápida no Oracle SQL
+## 🧾 Consulta rápida no MySQL
 
 ```sql
 SELECT * FROM MENSAGENS;
@@ -145,25 +145,72 @@ SELECT * FROM USUARIOS;
 
 ## 🐳 Deploy com Docker
 
+# Passo a passo de Conteinerização da API .NET + MySQL (Conexão Solidária)
+
+## ETAPA 1 — Subir o MySQL em container
+
 ```bash
-# Build da imagem
-docker build -t conexao-solidaria-api .
-
-# Executar localmente
-docker run -p 5000:80 conexao-solidaria-api
+docker run -d --name mysql-db \
+    -e MYSQL_ROOT_PASSWORD=Fruba123 \
+    -e MYSQL_DATABASE=conexao_solidaria_db \
+    -e MYSQL_USER=fruba \
+    -e MYSQL_PASSWORD=Fruba123 \
+    -p 3306:3306 \
+    -v mysql-volume:/var/lib/mysql \
+    mysql:8.0
 ```
-
-> O projeto está pronto para ser deployado no Azure com ajustes simples no `Dockerfile`.
 
 ---
 
-## 📹 Vídeos obrigatórios para entrega
+## ETAPA 2 — Testar conexão no MySQL no prompt
 
-- 🎥 **Vídeo de Demonstração (até 8 min):**  
-  Mostrar os principais endpoints funcionando via Swagger + código
+```bash
+docker exec -it mysql-db mysql -u fruba -p
+# Senha: Fruba123
+```
 
-- 🎙️ **Vídeo Pitch (até 3 min):**  
-  Explicar a ideia, o problema resolvido e como o sistema funciona
+### Dentro do MySQL:
+
+```sql
+SHOW DATABASES;
+USE conexao_solidaria_db;
+SHOW TABLES;
+exit;
+```
+
+---
+
+## ETAPA 3 — Build e run da API com Docker
+
+```bash
+cd "C:<CAMINHO_PARA_API>\api_gs_mensagens_conexao_solidaria"
+
+docker build -t conexao-solidaria-api .
+
+docker run -d --name conexao-solidaria-api \
+    --link mysql-db:mysql-db \
+    -p 8080:8080 \
+    -e ASPNETCORE_ENVIRONMENT=Production \
+    conexao-solidaria-api
+
+docker ps
+```
+
+---
+
+## ETAPA 4 — Testar via Swagger
+
+Acesse:
+
+```
+http://localhost:8080/swagger
+```
+
+Se der erro:
+
+```bash
+docker logs conexao-solidaria-api
+```
 
 ---
 

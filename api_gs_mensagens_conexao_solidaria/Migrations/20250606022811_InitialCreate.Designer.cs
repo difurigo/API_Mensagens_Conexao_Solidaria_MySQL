@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Oracle.EntityFrameworkCore.Metadata;
 using api_gs_mensagens_conexao_solidaria.Infrastructure.Data;
 
 #nullable disable
@@ -12,73 +12,73 @@ using api_gs_mensagens_conexao_solidaria.Infrastructure.Data;
 namespace api_gs_mensagens_conexao_solidaria.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250603222134_CriandoTabelasComRelacionamentoCorrigido")]
-    partial class CriandoTabelasComRelacionamentoCorrigido
+    [Migration("20250606022811_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "8.0.13")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("api_gs_mensagens_conexao_solidaria.Domain.Entities.Mensagem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("RAW(16)")
+                        .HasColumnType("char(36)")
                         .HasColumnName("ID");
 
                     b.Property<string>("Conteudo")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnType("varchar(2000)")
                         .HasColumnName("CONTEUDO");
 
                     b.Property<DateTime>("DataEnvio")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("DATA_ENVIO");
 
                     b.Property<string>("Localizacao")
                         .HasMaxLength(200)
-                        .HasColumnType("NVARCHAR2(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("LOCALIZACAO");
 
                     b.Property<string>("Prioridade")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("PRIORIDADE");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("STATUS");
 
                     b.Property<int>("TTL")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("TTL");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("NVARCHAR2(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("TITULO");
 
                     b.Property<string>("UUID")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR2(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("UUID");
 
                     b.Property<string>("UsuarioId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR2(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("USUARIO_ID");
 
                     b.HasKey("Id");
@@ -91,19 +91,25 @@ namespace api_gs_mensagens_conexao_solidaria.Migrations
             modelBuilder.Entity("api_gs_mensagens_conexao_solidaria.Domain.Entities.Usuario", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("NVARCHAR2(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("ID");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("EMAIL");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("NOME");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("USUARIOS", (string)null);
                 });
 
             modelBuilder.Entity("api_gs_mensagens_conexao_solidaria.Domain.Entities.Mensagem", b =>

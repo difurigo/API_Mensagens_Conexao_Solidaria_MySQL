@@ -1,6 +1,5 @@
 using api_gs_mensagens_conexao_solidaria.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Oracle.EntityFrameworkCore.Storage.Internal; // OracleExecutionStrategy
 
 namespace api_gs_mensagens_conexao_solidaria.Infrastructure.Data
 {
@@ -34,6 +33,32 @@ namespace api_gs_mensagens_conexao_solidaria.Infrastructure.Data
                 entity.Property(e => e.TTL).HasColumnName("TTL");
                 entity.Property(e => e.Status).HasColumnName("STATUS").HasMaxLength(50);
                 entity.Property(e => e.UsuarioId).HasColumnName("USUARIO_ID").IsRequired().HasMaxLength(100);
+
+                entity.HasOne(e => e.Usuario)
+                    .WithMany(u => u.Mensagens)
+                    .HasForeignKey(e => e.UsuarioId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.ToTable("USUARIOS");
+
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Nome)
+                    .HasColumnName("NOME")
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("EMAIL")
+                    .IsRequired()
+                    .HasMaxLength(200);
             });
         }
 
@@ -42,10 +67,13 @@ namespace api_gs_mensagens_conexao_solidaria.Infrastructure.Data
             if (!optionsBuilder.IsConfigured)
             {
                 var connectionString = _configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
+                /*
                 optionsBuilder.UseOracle(connectionString, opt =>
                     opt.ExecutionStrategy(dependencies => new OracleExecutionStrategy(dependencies))
                 );
+                */
             }
         }
     }
