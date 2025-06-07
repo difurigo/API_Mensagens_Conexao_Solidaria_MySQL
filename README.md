@@ -71,7 +71,7 @@ http://localhost:<PORTA>/swagger
 
 ```json
 {
-  "id": "123",
+  "id": "5",
   "nome": "Maria da Silva",
   "email": "maria@email.com"
 }
@@ -91,7 +91,7 @@ http://localhost:<PORTA>/swagger
   "localizacao": "Rua das Águas, 123",
   "ttl": 5,
   "status": "Pendente",
-  "usuarioId": "123"
+  "usuarioId": "5"
 }
 ```
 
@@ -114,7 +114,7 @@ Retorna todas as mensagens de um usuário.
   "prioridade": "Alta",
   "localizacao": "Rua Central, 999",
   "status": "Pendente",
-  "usuarioId": "123"
+  "usuarioId": "5"
 }
 ```
 
